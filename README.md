@@ -1,3 +1,5 @@
+**Real time retail order streaming and run analytics with Amazon Kinesis Data Analytics, AWS Glue, and Amazon Athena**
+
 **Table of Contents**
 1.	Introduction
 2.	Pipeline
@@ -10,6 +12,8 @@ The goal of this project is to make explore real time streaming and near real ti
 **Pipeline**
 I built a data pipeline that uses of the generated order logs, in here is running on an Amazon EC2 instance. The retail order is generated with the help of a python script running on EC2 instance and Is collected on real time with “Kinesis data streams” on which the Kinesis data analytics detects anomalies in individual record columns for a really unusual number of order quantities in the data stream by making use of RANDOM_CUT_FOREST algorithm available in the component.  
 This project also calculates the inflation rates of products of a particular sector using the SQL in Kinesis data analytics and then to persist data in S3 ,use it for dashboards visualization in Amazon athena.Amazon athena and AWS glue to crawl over S3 are the serverless manages services of AWS. 
+
+![image](https://user-images.githubusercontent.com/101117981/157688174-fb5013a7-f921-41c1-acec-572c51b39a63.png)
 
 **Environment set up**
 1.	Create all the Kinesis stream components from the AWS services console.
