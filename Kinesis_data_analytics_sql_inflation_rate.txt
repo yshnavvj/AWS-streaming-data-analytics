@@ -1,0 +1,42 @@
+CREATE OR REPLACE STREAM "DESTINATION_SQL_STREAM" (TICKER VARCHAR(4), MIN_PRICE REAL, MAX_PRICE REAL);
+
+CREATE OR REPLACE PUMP "STREAM_PUMP" AS INSERT INTO "DESTINATION_SQL_STREAM"
+    SELECT STREAM TICKER, MIN(PRICE), MAX(PRICE)
+        FROM "SOURCE_SQL_STREAM_001"
+        GROUP BY TICKER, 
+            STEP("SOURCE_SQL_STREAM_001".ROWTIME BY INTERVAL '60' SECOND);
+
+
+CREATE OR REPLACE STREAM "INTERMEDIATE_SQL_STREAM" (
+    ticker_symbol VARCHAR(4),
+    sector VARCHAR(16), 
+    ticker_symbol_count INTEGER,
+    avg_price REAL,
+    avg_change REAL,
+    max_price REAL,
+    min_price REAL);
+
+CREATE OR REPLACE  PUMP "STREAM_PUMP" AS INSERT INTO "INTERMEDIATE_SQL_STREAM"
+SELECT STREAM   ticker_symbol,
+                sector,
+                COUNT(*) AS ticker_symbol_count,
+                AVG(price) as avg_price,
+                AVG(change) as avg_change,
+                MAX(price) as max_price,
+                MIN(price) as min_price
+FROM "SOURCE_SQL_STREAM_001"
+GROUP BY ticker_symbol, sector, FLOOR(("SOURCE_SQL_STREAM_001".ROWTIME - TIMESTAMP '1970-01-01 00:00:00') SECOND / 10 TO SECOND);
+
+CREATE OR REPLACE STREAM "DESTINATION_SQL_STREAM" (
+    ticker_symbol VARCHAR(4),
+    sector VARCHAR(16), 
+    ticker_symbol_count INTEGER,
+    avg_price REAL,
+    avg_change REAL,
+    max_price REAL,
+    min_price REAL);
+
+CREATE OR REPLACE PUMP "STREAM_PUMP_02" AS INSERT INTO "DESTINATION_SQL_STREAM"
+SELECT STREAM   ticker_symbol, sector, ticker_symbol_count, avg_price, avg_change, max_price, min_price
+FROM "INTERMEDIATE_SQL_STREAM"
+WHERE sector = 'TECHNOLOGY';
