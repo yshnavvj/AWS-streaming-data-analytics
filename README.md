@@ -11,7 +11,7 @@ Retail order :Transaction rate alarm on real time with Kinesis data analytics an
 The goal of this project is to explore real time streaming and near real time streaming components of AWS big data analytics stack and build the above mentioned objective.
 
 **Pipeline**
-I built a data pipeline that uses of the generated order logs, from an Amazon EC2 instance. The retail order is generated with the help of a python script running on EC2 instance and is collected on real time with “Kinesis data streams” on which the Kinesis data analytics detects anomalies in individual record columns for a really unusual number of order quantities in the data stream by making use of RANDOM_CUT_FOREST algorithm available in the component.  
+I built a data pipeline from AWS management console that uses the generated order logs from an Amazon EC2 instance. The retail order is generated with the help of a python script running on EC2 instance and is collected on real time with “Kinesis data streams” on which the Kinesis data analytics detects anomalies in individual record columns for a really unusual number of order quantities in the data stream by making use of RANDOM_CUT_FOREST algorithm available in the component.  
 This project also calculates the inflation rates of products of a particular sector using the SQL in Kinesis data analytics and then to persist data in S3 ,use it for dashboards visualization in Amazon athena.
 
 ![image](https://user-images.githubusercontent.com/101117981/157690162-70ac1004-003d-49ff-90a2-58de585e73ed.png)
